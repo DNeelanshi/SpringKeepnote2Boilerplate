@@ -1,6 +1,7 @@
 package com.stackroute.keepnote.test;
-import static org.mockito.ArgumentMatchers.any;
+//import static org.mockito.ArgumentMatchers.any;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -36,7 +37,7 @@ public class NoteControllerTest {
 	private List<Note> allNotes;
 	@Mock
 	private NoteDAO noteDao;
-	
+
 	@InjectMocks
 	private NoteController noteController;
 	@Before
@@ -44,21 +45,21 @@ public class NoteControllerTest {
 		noteController = new NoteController(noteDao);
 		MockitoAnnotations.initMocks(this);
 		mockMvc = MockMvcBuilders.standaloneSetup(this.noteController).build();
-		
+
 		note = new Note(1, "Sample note application", "Testing for NoteController.class", "active", localDate);
 		Note note1 = new Note(1, "Sample note application -1", "Testing for NoteController.class", "active", localDate);
 		Note note2 = new Note(2, "Sample note application-2", "Testing for NoteController.class", "active", localDate);
 		Note note3 = new Note(3, "Sample note application-3", "Testing for NoteController.class", "active", localDate);
 		allNotes = Arrays.asList(note1, note2, note3);
 	}
-	
+
 	@Test
-    public void testMockCreation(){
-        assertNotNull(noteDao);
-        assertNotNull(noteController);
-        
-    }
-	
+	public void testMockCreation(){
+		assertNotNull(noteDao);
+		assertNotNull(noteController);
+
+	}
+
 	@Test
 	public void testIndexPage() throws Exception {
 		mockMvc.perform(get("/")).andExpect(status().isOk()).andExpect(forwardedUrl("index"));

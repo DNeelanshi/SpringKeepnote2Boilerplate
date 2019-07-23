@@ -8,7 +8,25 @@ package com.stackroute.keepnote.config;
  * @EnableTransactionManagement - Enables Spring's annotation-driven transaction management capability.
  *                  
  * */
+import java.io.IOException;
+import java.util.Properties;
 
+import javax.sound.midi.Track;
+import javax.sql.DataSource;
+
+import com.stackroute.keepnote.model.Note;
+import org.apache.commons.dbcp.BasicDataSource;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+
+@Configuration
+@EnableTransactionManagement
 public class ApplicationContextConfig {
 
 	/*
@@ -17,10 +35,43 @@ public class ApplicationContextConfig {
 	 * name 2. Database URL 3. UserName 4. Password
 	 */
 
+	@Bean
+	@Autowired
+	public DataSource getDataSource() {
+
+		BasicDataSource dataSource = new BasicDataSource();
+
+		dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+
+		//set database url, username and password
+		dataSource.setUrl("jdbc:mysql://localhost:3306/Employeedb");
+		dataSource.setUsername("root");
+		dataSource.setPassword("Root@123");
+
+		return dataSource;
+
+	}
+
 	/*
 	 * Define the bean for SessionFactory. Hibernate SessionFactory is the factory
 	 * class through which we get sessions and perform database operations.
 	 */
+	@Bean
+	@Autowired
+	public LocalSessionFactoryBean getSessionFactory(DataSource dataSource) throws IOException {
+
+		LocalSessionFactoryBean sessionFactoryBean = new LocalSessionFactoryBean();
+		sessionFactoryBean.setDataSource(dataSource);
+		Properties properties = new Properties();
+		properties.put("hibernate.show_sql", "true");
+		properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+		properties.put("hibernate.hbm2ddl.auto", "update");
+		sessionFactoryBean.setAnnotatedClasses(Note.class);
+		sessionFactoryBean.setHibernateProperties(properties);
+		sessionFactoryBean.afterPropertiesSet();
+		return sessionFactoryBean;
+
+	}
 
 	/*
 	 * Define the bean for Transaction Manager. HibernateTransactionManager handles
@@ -29,5 +80,20 @@ public class ApplicationContextConfig {
 	 * HibernateTransactionManager. HibernateTransactionManager can work with plain
 	 * JDBC too. HibernateTransactionManager allows bulk update and bulk insert and
 	 * ensures data integrity.
+	 *
 	 */
+
+	@Bean
+	public HibernateTransactionManager getTransactionManager(SessionFactory sessionFactory) {
+
+		HibernateTransactionManager transaction = new HibernateTransactionManager();
+		transaction.setSessionFactory(sessionFactory);
+		return transaction;
+	}
+
+
+
+
+
+
 }

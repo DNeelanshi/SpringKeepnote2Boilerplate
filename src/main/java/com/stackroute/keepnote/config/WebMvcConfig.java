@@ -1,6 +1,12 @@
 package com.stackroute.keepnote.config;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.JstlView;
 
 /*This class will contain bean for viewresolver
  * Define the following annotations:
@@ -12,6 +18,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * 				   configuration from WebMvcConfigurationSupport 
  * */
 
+@Configuration
+@EnableWebMvc
+@ComponentScan(basePackages = "com.stackroute.keepnote")
 public class WebMvcConfig implements WebMvcConfigurer {
 
 	/*
@@ -20,4 +29,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	 * of mapping logical view names to actual views, such as a JSP or a HTML page.
 	 */
 
+	@Bean
+	public InternalResourceViewResolver resolver() {
+
+		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+		viewResolver.setViewClass(JstlView.class);
+		viewResolver.setPrefix("/WEB-INF/views/");
+		viewResolver.setSuffix(".jsp");
+		return viewResolver;
+	}
 }

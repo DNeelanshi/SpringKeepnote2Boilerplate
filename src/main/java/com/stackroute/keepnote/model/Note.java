@@ -1,5 +1,8 @@
 package com.stackroute.keepnote.model;
 
+import org.springframework.stereotype.Component;
+
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /*
@@ -9,53 +12,81 @@ import java.time.LocalDateTime;
  * process of looking through that particular Java object to recreate it as a table in your database.
  */
 
+@Entity
 public class Note {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int noteId;
+
+	@Column
+	private String noteTitle;
+
+	@Column
+	private  String  noteContent;
+
+	@Column
+	private String noteStatus;
+
+	LocalDateTime datetime = LocalDateTime.now();
+
+	@Column
+	private LocalDateTime createdAt = datetime;
+
 
 	public Note() {
 
 	}
 
-	public Note(int i, String string, String string2, String string3, LocalDateTime localDate) {
+	public Note(int noteId, String noteTitle, String noteContent, String noteStatus, LocalDateTime createdAt) {
+		this.noteId = noteId;
+		this.noteTitle = noteTitle;
+		this.noteContent = noteContent;
+		this.noteStatus = noteStatus;
+		this.createdAt = createdAt;
 	}
 
 	public int getNoteId() {
+		return noteId;
+	}
 
-		return 0;
+	public void setNoteId(int noteId) {
+		this.noteId = noteId;
 	}
 
 	public String getNoteTitle() {
+		return noteTitle;
+	}
 
-		return null;
+	public void setNoteTitle(String noteTitle) {
+		this.noteTitle = noteTitle;
 	}
 
 	public String getNoteContent() {
+		return noteContent;
+	}
 
-		return null;
+	public void setNoteContent(String noteContent) {
+		this.noteContent = noteContent;
 	}
 
 	public String getNoteStatus() {
-
-		return null;
+		return noteStatus;
 	}
 
-	public void setNoteId(int parseInt) {
-
+	public void setNoteStatus(String noteStatus) {
+		this.noteStatus = noteStatus;
 	}
 
-	public void setNoteTitle(String parameter) {
-
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setNoteContent(String parameter) {
-
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
 
-	public void setNoteStatus(String parameter) {
 
-	}
 
-	public void setCreatedAt(LocalDateTime now) {
-
-	}
 
 }
